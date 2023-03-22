@@ -1,3 +1,6 @@
+using Pweb.API.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<PWebDBContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("test"));
+});
 
 var app = builder.Build();
 
