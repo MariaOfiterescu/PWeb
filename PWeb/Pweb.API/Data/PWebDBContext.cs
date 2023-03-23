@@ -10,7 +10,7 @@ namespace Pweb.API.Data
     public class PWebDBContext : DbContext
     {
         //constructor
-        public PWebDBContext(DbContextOptions <PWebDBContext> options): base(options)
+        public PWebDBContext(DbContextOptions<PWebDBContext> options): base(options)
         {
             
         }

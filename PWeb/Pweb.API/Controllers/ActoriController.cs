@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pweb.API.Data;
 using Pweb.API.Models.Domain;
 using Pweb.API.Models.DTOs;
@@ -9,7 +10,9 @@ namespace Pweb.API.Controllers
 {
      [Route("api/[controller]")]
      [ApiController]
-
+     // DACA NU AVEM Authorize TOATA LUMEA CARE ARE URL UL POATE ACCESA ACTORII
+     //[Authorize]  
+     // acum fiecare metoda a clasei din interiorul clasei va fi accesata prin userul autenticat
     public class ActoriController : ControllerBase
     {
         
@@ -22,6 +25,7 @@ namespace Pweb.API.Controllers
 
        // GET controller
       [HttpGet]
+      [Authorize(Roles= "User,Admin")]
       public IActionResult GetAllActors()
         {
             //Get data from Database - Domain models
@@ -71,7 +75,7 @@ namespace Pweb.API.Controllers
         //GET : https://localhost:7183/swagger/index.html
         [HttpGet]
         [Route("{id:int}")]
-
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetById([FromRoute] int id) 
         {
             //var actori = dBContext.actori.Find(id); // poate fi folosit doar pentru propriatetea id
@@ -104,6 +108,7 @@ namespace Pweb.API.Controllers
         //POST : https://localhost:7183/swagger/index.html || https://localhost:7183/api/actori/{id}
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody] AddActoriRequestDTO addActoriRequestDTO)
         {
             //Map or Convert DTO to Domain Model
@@ -141,6 +146,7 @@ namespace Pweb.API.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Update([FromRoute] int id, [FromBody] UpdateActoriRequestDTO updateActoriRequestDTO)
         {
             // Check if region exists
@@ -179,6 +185,7 @@ namespace Pweb.API.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete([FromRoute] int id)
         {
            var actorDomainModel = dBContext.actori.FirstOrDefault(x => x.actorid ==id);
@@ -209,4 +216,6 @@ namespace Pweb.API.Controllers
         }
 
     }
+
+
 }
