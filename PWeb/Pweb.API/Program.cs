@@ -20,8 +20,13 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
         Name = "Authorization",
+        Description = "Please enter token",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
+       // Type = SecuritySchemeType.Http,
+       // BearerFormat = "JWT",
+        //Scheme = "bearer",
+     
         Scheme = JwtBearerDefaults.AuthenticationScheme
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -33,13 +38,18 @@ builder.Services.AddSwaggerGen(options =>
             {
                 Type = ReferenceType.SecurityScheme,
                 Id = JwtBearerDefaults.AuthenticationScheme
+               // Id ="Bearer"
             },
+
             Scheme = "Oauth2",
             Name = JwtBearerDefaults.AuthenticationScheme,
             In = ParameterLocation.Header
+        
         },
-        new List<string>()
-    }
+         new List<string>()
+         //new string[]{}
+
+      }
     });
 });
 
@@ -97,6 +107,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseCookiePolicy();
 
 
 app.UseAuthentication();

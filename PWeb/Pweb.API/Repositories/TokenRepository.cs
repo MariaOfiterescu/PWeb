@@ -37,10 +37,12 @@ namespace Pweb.API.Repositories
 
             var token = new JwtSecurityToken(
                 configuration["Pweb:Issuer"],
-                configuration["Pweb:Audiemce"],
-                claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials : credentials);
+                configuration["Pweb:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials : credentials
+                );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
