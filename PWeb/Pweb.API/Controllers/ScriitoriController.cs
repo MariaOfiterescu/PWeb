@@ -25,14 +25,14 @@ namespace Pweb.API.Controllers
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAllScriitori()
         {
-            //Get data from Database - Domain models
+            //luam modelul din baza de date 
 
-            var scriitori_domeniu = dBContext.scriitori.ToList(); //luam modelul din baza de date 
+            var scriitori_domeniu = dBContext.scriitori.ToList();
 
-            //Map domain models to DTOs
+            //punem domain model ul in DTO
 
-            var scriitoriDTO = new List<ScriitoriDTO>(); //punem domain model ul in DTO
-            foreach (var scriitor in scriitori_domeniu) //regionDomain si regionsDomain
+            var scriitoriDTO = new List<ScriitoriDTO>(); 
+            foreach (var scriitor in scriitori_domeniu) 
 
             {
                 scriitoriDTO.Add(new ScriitoriDTO()
@@ -44,22 +44,21 @@ namespace Pweb.API.Controllers
                 });
             }
 
-            //return DTOs
+          
             return Ok(scriitoriDTO);
 
 
         }
 
-        //get by id - get singe actor
-        //GET : https://localhost:7183/swagger/index.html
+        //get by id - afisare un singur scriitor dupa id
+        //GET 
         [HttpGet]
         [Route("{id:int}")]
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetById([FromRoute] int id)
         {
-            //var actori = dBContext.actori.Find(id); // poate fi folosit doar pentru propriatetea id
 
-            //get actori domain model din baza de date
+            //luam scriitori domain model din baza de date
 
             var scriitori = dBContext.scriitori.FirstOrDefault(x => x.scriitorid == id); //putem cauta dupa id, nume ,sau orice altceva
 
@@ -68,7 +67,7 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            // Map/ Convert Actori Domain Model la Actori DTO
+            // Mapare/Convertire Scriitori Domain Model la Scriitori DTO
 
             var scriitori_DTO = new ScriitoriDTO
             {
@@ -79,18 +78,18 @@ namespace Pweb.API.Controllers
 
             };
 
-            //Return  DTO back to client
+            //Returnare  DTO inapoi la client
             return Ok(scriitori_DTO);
         }
 
-        //POST to create new actor
-        //POST : https://localhost:7183/swagger/index.html || https://localhost:7183/api/actori/{id}
+        //POST : crearea unui nou Scriitor
+        //POST
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody] AddScriitoriRequestDTO addScriitoriRequestDTO)
         {
-            //Map or Convert DTO to Domain Model
+            //Mapare sau Convertire DTO la Domain Model
             var scriitoriDomainModel = new Scriitori
             {
                 scriitorid = addScriitoriRequestDTO.scriitorid,
@@ -100,12 +99,12 @@ namespace Pweb.API.Controllers
 
             };
 
-            //Use Domain Model to create Actori
+            //Folosim Domain Model pentru a cre Scriitori
             dBContext.scriitori.Add(scriitoriDomainModel);
 
             dBContext.SaveChanges();
 
-            //Map Domain model back to DTO
+            //Mapare Domain model inapoi la DTO
 
             var scriitoriDTO = new ScriitoriDTO
             {
@@ -119,15 +118,15 @@ namespace Pweb.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = scriitoriDTO.scriitorid }, scriitoriDomainModel);
         }
 
-        //Update Actori
-        //PUT : https://localhost:7183/api/actori/{id}
+        //Update Scriitori
+        //PUT 
 
         [HttpPut]
         [Route("{id:int}")]
         [Authorize(Roles = "Admin")]
         public IActionResult Update([FromRoute] int id, [FromBody] UpdateScriitoriRequestDTO updateScriitoriRequestDTO)
         {
-            // Check if region exists
+            //Verificare daca scriitorul exista
             var scriitoriDomainModel = dBContext.scriitori.FirstOrDefault(x => x.scriitorid == id);
 
             if (scriitoriDomainModel == null)
@@ -135,16 +134,15 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //Map DTO to Domain model
+            //Mapare DTO la Domain model
 
-            //filmeactoriDomainModel.filmid = updateFilmeActoriRequestDTO.filmid;
             scriitoriDomainModel.nume = updateScriitoriRequestDTO.nume;
             scriitoriDomainModel.prenume = updateScriitoriRequestDTO.prenume;
             scriitoriDomainModel.varsta = updateScriitoriRequestDTO.varsta;
 
             dBContext.SaveChanges();
 
-            //Convert Domain Model to DTO
+            //Convertire Domain Model la DTO
 
             var scriitoriDTO = new ScriitoriDTO
             {
@@ -157,8 +155,8 @@ namespace Pweb.API.Controllers
             return Ok(scriitoriDTO);
         }
 
-        //Delete Region
-        //DELETE : https://localhost:7183/api/actori/{id}
+        //Delete Scriitor
+        //DELETE 
 
         [HttpDelete]
         [Route("{id:int}")]
@@ -172,12 +170,12 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //delete actor
+            //stergere scriitor
             dBContext.scriitori.Remove(scriitoriDomainModel);
             dBContext.SaveChanges();
 
-            //return the deleted actor back
-            //map Domain Model to DTO
+            //afisarea scriitorului sters
+            //mapare Domain Model la DTO
 
             var scriitoriDTO = new ScriitoriDTO
             {

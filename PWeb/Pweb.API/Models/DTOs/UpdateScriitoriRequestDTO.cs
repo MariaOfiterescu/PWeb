@@ -4,7 +4,7 @@ namespace Pweb.API.Models.DTOs
 {
     public class UpdateScriitoriRequestDTO
     {
-        [Key] public int scriitorid { get; set; } //primary key
+       
 
         public string nume { get; set; }
 

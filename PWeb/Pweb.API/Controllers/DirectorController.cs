@@ -25,14 +25,14 @@ namespace Pweb.API.Controllers
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAllDirectors()
         {
-            //Get data from Database - Domain models
+            //luam modelul din baza de date
 
-            var director_domeniu = dBContext.director.ToList(); //luam modelul din baza de date 
+            var director_domeniu = dBContext.director.ToList();
 
-            //Map domain models to DTOs
+            //punem domain model ul in DTO
 
-            var directorDTO = new List<DirectorDTO>(); //punem domain model ul in DTO
-            foreach (var director in director_domeniu) //regionDomain si regionsDomain
+            var directorDTO = new List<DirectorDTO>(); 
+            foreach (var director in director_domeniu) 
 
             {
                 directorDTO.Add(new DirectorDTO()
@@ -45,22 +45,22 @@ namespace Pweb.API.Controllers
                 });
             }
 
-            //return DTOs
+            
             return Ok(directorDTO);
 
 
         }
 
-        //get by id - get singe actor
-        //GET : https://localhost:7183/swagger/index.html
+        //get by id - afisam un singur director dupa id
+        //GET 
         [HttpGet]
         [Route("{id:int}")]
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetById([FromRoute] int id)
         {
-            //var actori = dBContext.actori.Find(id); // poate fi folosit doar pentru propriatetea id
+            
 
-            //get actori domain model din baza de date
+            //luam director domain model din baza de date
 
             var director = dBContext.director.FirstOrDefault(x => x.directorid == id); //putem cauta dupa id, nume ,sau orice altceva
 
@@ -69,7 +69,7 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            // Map/ Convert Actori Domain Model la Actori DTO
+            // Mapare/Convertire Director Domain Model la Director DTO
 
             var director_DTO = new DirectorDTO
             {
@@ -79,18 +79,18 @@ namespace Pweb.API.Controllers
                 varsta = director.varsta
             };
 
-            //Return  DTO back to client
+            //Returnare  DTO inapoi la client
             return Ok(director_DTO);
         }
 
-        //POST to create new actor
-        //POST : https://localhost:7183/swagger/index.html || https://localhost:7183/api/actori/{id}
+        //POST : crearea unui nou Director
+        //POST 
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody] AddDirectorRequestDTO addDirectorRequestDTO)
         {
-            //Map or Convert DTO to Domain Model
+            //Mapare sau Convertire DTO la Domain Model
             var directorDomainModel = new Director
             {
                 directorid = addDirectorRequestDTO.directorid,
@@ -99,12 +99,12 @@ namespace Pweb.API.Controllers
                 varsta = addDirectorRequestDTO.varsta
             };
 
-            //Use Domain Model to create Actori
+            //Folosire Domain Model pentru a crea Director
             dBContext.director.Add(directorDomainModel);
 
             dBContext.SaveChanges();
 
-            //Map Domain model back to DTO
+            //Mapare Domain model inapoi la DTO
 
             var directorDTO = new DirectorDTO
             {
@@ -118,15 +118,15 @@ namespace Pweb.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = directorDTO.directorid }, directorDomainModel);
         }
 
-        //Update Actori
-        //PUT : https://localhost:7183/api/actori/{id}
+        //Update Director
+        //PUT 
 
         [HttpPut]
         [Route("{id:int}")]
         [Authorize(Roles = "Admin")]
         public IActionResult Update([FromRoute] int id, [FromBody] UpdateDirectorRequestDTO updateDirectorRequestDTO)
         {
-            // Check if region exists
+            // Verificare daca director exista 
             var directorDomainModel = dBContext.director.FirstOrDefault(x => x.directorid == id);
 
             if (directorDomainModel == null)
@@ -134,17 +134,15 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //Map DTO to Domain model
+            //Mapare DTO la Domain model
 
             directorDomainModel.nume = updateDirectorRequestDTO.nume;
             directorDomainModel.prenume = updateDirectorRequestDTO.prenume;
             directorDomainModel.varsta = updateDirectorRequestDTO.varsta;
 
-
-
             dBContext.SaveChanges();
 
-            //Convert Domain Model to DTO
+            //Convertire Domain Model la DTO
 
             var directorDTO = new DirectorDTO
             {
@@ -158,8 +156,8 @@ namespace Pweb.API.Controllers
             return Ok(directorDTO);
         }
 
-        //Delete Region
-        //DELETE : https://localhost:7183/api/actori/{id}
+        //Delete Director
+        //DELETE 
 
         [HttpDelete]
         [Route("{id:int}")]
@@ -173,11 +171,11 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //delete actor
+            //stergere director
             dBContext.director.Remove(directorDomainModel);
             dBContext.SaveChanges();
 
-            //return the deleted actor back
+            //afisare director sters 
             //map Domain Model to DTO
 
             var directorDTO = new DirectorDTO

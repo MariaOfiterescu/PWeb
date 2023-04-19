@@ -24,14 +24,14 @@ namespace Pweb.API.Controllers
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAllGenuri()
         {
-            //Get data from Database - Domain models
+            //luam modelul din baza de date 
 
-            var genuri_domeniu = dBContext.genuri.ToList(); //luam modelul din baza de date 
+            var genuri_domeniu = dBContext.genuri.ToList();
 
-            //Map domain models to DTOs
+            //punem domain model ul in DTO
 
-            var genuriDTO = new List<GenuriDTO>(); //punem domain model ul in DTO
-            foreach (var gen in genuri_domeniu) //regionDomain si regionsDomain
+            var genuriDTO = new List<GenuriDTO>(); 
+            foreach (var gen in genuri_domeniu) 
 
             {
                 genuriDTO.Add(new GenuriDTO()
@@ -42,22 +42,21 @@ namespace Pweb.API.Controllers
                 });
             }
 
-            //return DTOs
+           
             return Ok(genuriDTO);
 
 
         }
 
-        //get by id - get singe actor
-        //GET : https://localhost:7183/swagger/index.html
+        //get by id - afisare un singur gen
+        //GET 
         [HttpGet]
         [Route("{id:int}")]
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetById([FromRoute] int id)
         {
-            //var actori = dBContext.actori.Find(id); // poate fi folosit doar pentru propriatetea id
-
-            //get actori domain model din baza de date
+            
+            //luare genuri domain model din baza de date
 
             var genuri = dBContext.genuri.FirstOrDefault(x => x.genid == id); //putem cauta dupa id, nume ,sau orice altceva
 
@@ -66,7 +65,7 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            // Map/ Convert Actori Domain Model la Actori DTO
+            // Mapare/Convertire Genuri Domain Model la Genuri DTO
 
             var genuri_DTO = new GenuriDTO
             {
@@ -76,18 +75,18 @@ namespace Pweb.API.Controllers
 
             };
 
-            //Return  DTO back to client
+            //Returnare DTO inapoi client
             return Ok(genuri_DTO);
         }
 
-        //POST to create new actor
-        //POST : https://localhost:7183/swagger/index.html || https://localhost:7183/api/actori/{id}
+        //POST : pentru a crea un nou gen
+        //POST 
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody] AddGenuriRequestDTO addGenuriRequestDTO)
         {
-            //Map or Convert DTO to Domain Model
+            //Mapare sau Convertire DTO la Domain Model
             var genuriDomainModel = new Genuri
             {
                 genid = addGenuriRequestDTO.genid,
@@ -95,12 +94,12 @@ namespace Pweb.API.Controllers
 
             };
 
-            //Use Domain Model to create Actori
+            //Folosim Domain Model pentru a crea Gen
             dBContext.genuri.Add(genuriDomainModel);
 
             dBContext.SaveChanges();
 
-            //Map Domain model back to DTO
+            //Mapare Domain model inapoi la  DTO
 
             var genuriDTO = new GenuriDTO
             {
@@ -113,15 +112,15 @@ namespace Pweb.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = genuriDTO.genid }, genuriDomainModel);
         }
 
-        //Update Actori
-        //PUT : https://localhost:7183/api/actori/{id}
+        //Update Genuri
+        //PUT 
 
         [HttpPut]
         [Route("{id:int}")]
         [Authorize(Roles = "Admin")]
         public IActionResult Update([FromRoute] int id, [FromBody] UpdateGenuriRequestDTO updateGenuriRequestDTO)
         {
-            // Check if region exists
+            // Verificare daca genul exista
             var genuriDomainModel = dBContext.genuri.FirstOrDefault(x => x.genid == id);
 
             if (genuriDomainModel == null)
@@ -129,7 +128,7 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //Map DTO to Domain model
+            //Mapare DTO la Domain model
 
 
             // genuriDomainModel.genid = updateGenuriRequestDTO.genid;
@@ -140,7 +139,7 @@ namespace Pweb.API.Controllers
 
             dBContext.SaveChanges();
 
-            //Convert Domain Model to DTO
+            //Convertire Domain Model la DTO
 
             var genuriDTO = new GenuriDTO
             {
@@ -151,8 +150,8 @@ namespace Pweb.API.Controllers
             return Ok(genuriDTO);
         }
 
-        //Delete Region
-        //DELETE : https://localhost:7183/api/actori/{id}
+        //Delete Gen
+        //DELETE 
 
         [HttpDelete]
         [Route("{id:int}")]
@@ -166,12 +165,12 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //delete actor
+            //stergere gen
             dBContext.genuri.Remove(genuriDomainModel);
             dBContext.SaveChanges();
 
-            //return the deleted actor back
-            //map Domain Model to DTO
+            //afisarea genului sters
+            //mapare Domain Model la DTO
 
             var genuriDTO = new GenuriDTO
             {

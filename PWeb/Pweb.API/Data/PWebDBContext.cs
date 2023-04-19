@@ -15,7 +15,8 @@ namespace Pweb.API.Data
             
         }
 
-        public DbSet<Actori> actori { get; set; } //te rog creeaza un tabel actori daca acesta nu exista in baza de date , e bun in termenii migrarii
+        //te rog creeaza un tabel actori daca acesta nu exista in baza de date , e bun in termenii migrarii
+        public DbSet<Actori> actori { get; set; } 
 
         public DbSet<Director> director { get; set; }
 

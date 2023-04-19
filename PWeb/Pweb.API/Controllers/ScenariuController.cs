@@ -26,14 +26,14 @@ namespace Pweb.API.Controllers
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAllScenariu()
         {
-            //Get data from Database - Domain models
+            //luam modelul din baza de date 
 
-            var scenariu_domeniu = dBContext.scenariu.ToList(); //luam modelul din baza de date 
+            var scenariu_domeniu = dBContext.scenariu.ToList();
 
-            //Map domain models to DTOs
+            //punem domain model ul in DTO
 
-            var scenariuDTO = new List<ScenariuDTO>(); //punem domain model ul in DTO
-            foreach (var scenariu in scenariu_domeniu) //regionDomain si regionsDomain
+            var scenariuDTO = new List<ScenariuDTO>();
+            foreach (var scenariu in scenariu_domeniu) 
 
             {
                 scenariuDTO.Add(new ScenariuDTO()
@@ -44,22 +44,22 @@ namespace Pweb.API.Controllers
                 });
             }
 
-            //return DTOs
+            
             return Ok(scenariuDTO);
 
 
         }
 
-        //get by id - get singe actor
-        //GET : https://localhost:7183/swagger/index.html
+        //get by id - afisarea unui singur Scenariu
+        //GET 
         [HttpGet]
         [Route("{id:int}")]
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetById([FromRoute] int id)
         {
-            //var actori = dBContext.actori.Find(id); // poate fi folosit doar pentru propriatetea id
+            
 
-            //get actori domain model din baza de date
+            //luare scenariu domain model din baza de date
 
             var scenariu = dBContext.scenariu.FirstOrDefault(x => x.scenariuid == id); //putem cauta dupa id, nume ,sau orice altceva
 
@@ -68,7 +68,7 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            // Map/ Convert Actori Domain Model la Actori DTO
+            // Mapare/Convertire Scenariu Domain Model la Scenariu DTO
 
             var scenariu_DTO = new ScenariuDTO
             {
@@ -77,18 +77,18 @@ namespace Pweb.API.Controllers
                
             };
 
-            //Return  DTO back to client
+            //Returnare  DTO inapoi la  client
             return Ok(scenariu_DTO);
         }
 
-        //POST to create new actor
-        //POST : https://localhost:7183/swagger/index.html || https://localhost:7183/api/actori/{id}
+        //POST : crearea unui nou scenariu
+        //POST 
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody] AddScenariuRequestDTO addScenariuRequestDTO)
         {
-            //Map or Convert DTO to Domain Model
+            //Mapare sau Convertire DTO la Domain Model
             var scenariuDomainModel = new Scenariu
             {
                 scenariuid = addScenariuRequestDTO.scenariuid,
@@ -96,12 +96,12 @@ namespace Pweb.API.Controllers
                
             };
 
-            //Use Domain Model to create Actori
+            //Folosim Domain Model pentru a  crea Scenariu
             dBContext.scenariu.Add(scenariuDomainModel);
 
             dBContext.SaveChanges();
 
-            //Map Domain model back to DTO
+            //Mapare Domain model inapoi la DTO
 
             var scenariuDTO = new ScenariuDTO
             {
@@ -113,15 +113,15 @@ namespace Pweb.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = scenariuDTO.scenariuid }, scenariuDomainModel);
         }
 
-        //Update Actori
-        //PUT : https://localhost:7183/api/actori/{id}
+        //Update Secanriu
+        //PUT 
 
         [HttpPut]
         [Route("{id:int}")]
         [Authorize(Roles = "Admin")]
         public IActionResult Update([FromRoute] int id, [FromBody] UpdateScenariuRequestDTO updateScenariuRequestDTO)
         {
-            // Check if region exists
+            // verificare daca scenariu exista
             var scenariuDomainModel = dBContext.scenariu.FirstOrDefault(x => x.scenariuid == id);
 
             if (scenariuDomainModel == null)
@@ -129,28 +129,26 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //Map DTO to Domain model
+            //Mapare DTO la Domain model
 
             scenariuDomainModel.nume = updateScenariuRequestDTO.nume;
             
 
             dBContext.SaveChanges();
 
-            //Convert Domain Model to DTO
+            //Convertire Domain Model la DTO
 
             var scenariuDTO = new ScenariuDTO
             {
                 scenariuid = scenariuDomainModel.scenariuid,
                 nume = scenariuDomainModel.nume,
-                
-
-
+   
             };
             return Ok(scenariuDTO);
         }
 
-        //Delete Region
-        //DELETE : https://localhost:7183/api/actori/{id}
+        //Delete Scenariu
+        //DELETE 
 
         [HttpDelete]
         [Route("{id:int}")]
@@ -164,12 +162,12 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //delete actor
+            //stergere scenariu
             dBContext.scenariu.Remove(scenariuDomainModel);
             dBContext.SaveChanges();
 
-            //return the deleted actor back
-            //map Domain Model to DTO
+            //afisarea scenariului sters
+            //mapare Domain Model la DTO
 
             var scenariuDTO = new ScenariuDTO
             {

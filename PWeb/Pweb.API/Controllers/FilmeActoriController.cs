@@ -25,14 +25,14 @@ namespace Pweb.API.Controllers
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetAllFilmeActori()
         {
-            //Get data from Database - Domain models
+            //luam modelul din baza de date 
 
-            var filmeactori_domeniu = dBContext.filmeactori.ToList(); //luam modelul din baza de date 
+            var filmeactori_domeniu = dBContext.filmeactori.ToList();
 
-            //Map domain models to DTOs
+            //punem domain model ul in DTO
 
-            var filmeactoriDTO = new List<FilmeActoriDTO>(); //punem domain model ul in DTO
-            foreach (var filmeactor in filmeactori_domeniu) //regionDomain si regionsDomain
+            var filmeactoriDTO = new List<FilmeActoriDTO>();
+            foreach (var filmeactor in filmeactori_domeniu) 
 
             {
                 filmeactoriDTO.Add(new FilmeActoriDTO()
@@ -42,22 +42,22 @@ namespace Pweb.API.Controllers
                 });
             }
 
-            //return DTOs
+           
             return Ok(filmeactoriDTO);
 
 
         }
 
-        //get by id - get singe actor
-        //GET : https://localhost:7183/swagger/index.html
+        //get by id - afisare FilmeActori dupa un singur id
+        //GET 
         [HttpGet]
         [Route("{id:int}")]
         [Authorize(Roles = "User,Admin")]
         public IActionResult GetById([FromRoute] int id)
         {
-            //var actori = dBContext.actori.Find(id); // poate fi folosit doar pentru propriatetea id
+            
 
-            //get actori domain model din baza de date
+            //luam FilmeActori domain model din baza de date
 
             var filmeactori = dBContext.filmeactori.FirstOrDefault(x => x.filmid == id); //putem cauta dupa id, nume ,sau orice altceva
 
@@ -66,7 +66,7 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            // Map/ Convert Actori Domain Model la Actori DTO
+            // Convertire FilmeActori Domain Model la FilmeActori DTO
 
             var filmeactori_DTO = new FilmeActoriDTO
             {
@@ -75,18 +75,18 @@ namespace Pweb.API.Controllers
                
             };
 
-            //Return  DTO back to client
+            //Returnare  DTO inapoi la client
             return Ok(filmeactori_DTO);
         }
 
-        //POST to create new actor
-        //POST : https://localhost:7183/swagger/index.html || https://localhost:7183/api/actori/{id}
+        //POST : creare o noua legatura FilmeActori
+        //POST 
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody] AddFilmeActoriRequestDTO addFilmeActoriRequestDTO)
         {
-            //Map or Convert DTO to Domain Model
+            //Mapare sau Convertire DTO la Domain Model
             var filmeactoriDomainModel = new FilmeActori
             {
                 filmid = addFilmeActoriRequestDTO.filmid,
@@ -94,12 +94,12 @@ namespace Pweb.API.Controllers
                
             };
 
-            //Use Domain Model to create Actori
+            //Folosim Domain Model pentru a crea FilmeActori
             dBContext.filmeactori.Add(filmeactoriDomainModel);
 
             dBContext.SaveChanges();
 
-            //Map Domain model back to DTO
+            //Mapare Domain model inapoi la DTO
 
             var filmeactoriDTO = new FilmeActoriDTO
             {
@@ -111,15 +111,15 @@ namespace Pweb.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = filmeactoriDTO.filmid }, filmeactoriDomainModel);
         }
 
-        //Update Actori
-        //PUT : https://localhost:7183/api/actori/{id}
+        //Update FilmeActori
+        //PUT 
 
         [HttpPut]
         [Route("{id:int}")]
         [Authorize(Roles = "Admin")]
         public IActionResult Update([FromRoute] int id, [FromBody] UpdateFilmeActoriRequestDTO updateFilmeActoriRequestDTO)
         {
-            // Check if region exists
+            // Verificare daca FilmeActori exista 
             var filmeactoriDomainModel = dBContext.filmeactori.FirstOrDefault(x => x.filmid == id);
 
             if (filmeactoriDomainModel == null)
@@ -127,17 +127,15 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //Map DTO to Domain model
+            //Mapare DTO la Domain model
 
             //filmeactoriDomainModel.filmid = updateFilmeActoriRequestDTO.filmid;
             filmeactoriDomainModel.actorid = updateFilmeActoriRequestDTO.actorid;
            
 
-
-
             dBContext.SaveChanges();
 
-            //Convert Domain Model to DTO
+            //Convertire Domain Model la DTO
 
             var filmeactoriDTO = new FilmeActoriDTO
             {
@@ -148,8 +146,8 @@ namespace Pweb.API.Controllers
             return Ok(filmeactoriDTO);
         }
 
-        //Delete Region
-        //DELETE : https://localhost:7183/api/actori/{id}
+        //Delete FilmeActori
+        //DELETE 
 
         [HttpDelete]
         [Route("{id:int}")]
@@ -163,12 +161,12 @@ namespace Pweb.API.Controllers
                 return NotFound();
             }
 
-            //delete actor
+            //stergere FilmeActori
             dBContext.filmeactori.Remove(filmeactoriDomainModel);
             dBContext.SaveChanges();
 
-            //return the deleted actor back
-            //map Domain Model to DTO
+            //returnare campul FilmeActori sters 
+            //mapare Domain Model la DTO
 
             var filmeactoriDTO = new FilmeActoriDTO
             {

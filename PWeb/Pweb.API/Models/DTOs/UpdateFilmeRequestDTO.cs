@@ -6,7 +6,7 @@ namespace Pweb.API.Models.DTOs
 {
     public class UpdateFilmeRequestDTO
     {
-        [Key] public int filmid { get; set; }
+       
 
         public int directorid1 { get; set; }
         [ForeignKey("directorid1")]
@@ -14,11 +14,11 @@ namespace Pweb.API.Models.DTOs
 
         public int genid { get; set; }
         [ForeignKey("genid")]
-        public Genuri Gen { get; set; }
+        //public Genuri Gen { get; set; }
 
         public int actorid { get; set; }
         [ForeignKey("actorid")]
-        public Actori Actor { get; set; }
+       // public Actori Actor { get; set; }
 
         public int scenariuid1 { get; set; }
         [ForeignKey("scenariuid1")]

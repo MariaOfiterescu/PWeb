@@ -4,7 +4,6 @@ namespace Pweb.API.Models.DTOs
 {
     public class UpdateDirectorRequestDTO
     {
-        [Key] public int directorid { get; set; }
 
         public string nume { get; set; }
 
